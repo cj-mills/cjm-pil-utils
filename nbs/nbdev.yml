@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "cjm-pil-utils"
+  site-url: "https://cj-mills.github.io/cjm-pil-utils"
+  description: "Some PIL utility functions I frequently use."
+  repo-branch: main
+  repo-url: "https://github.com/cj-mills/cjm-pil-utils"
