@@ -71,7 +71,7 @@ def resize_img(img:'Image', # The image to be resized
     return img
 
 # %% ../nbs/00_core.ipynb 17
-def stack_imgs(imgs:list['Image'] # A list of PIL.Image objects.
+def stack_imgs(imgs:['Image'] # A list of PIL.Image objects.
               ):
     """
     Stacks a list of images horizontally or vertically, depending on which dimension is larger.
