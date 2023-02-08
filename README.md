@@ -57,3 +57,14 @@ print(f"Stacked Image Size: {stacked_imgs.size}")
 ```
 
     Stacked Image Size: (576, 768)
+
+### avg_images
+
+``` python
+from cjm_pil_utils.core import avg_images
+```
+
+``` python
+img_1, img_2 = (Image.open(path) for path in img_paths)
+avg_img = avg_images(img_1, img_2, 0.5)
+```
