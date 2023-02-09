@@ -68,3 +68,15 @@ from cjm_pil_utils.core import avg_images
 img_1, img_2 = (Image.open(path) for path in img_paths)
 avg_img = avg_images(img_1, img_2, 0.5)
 ```
+
+### crop_square
+
+``` python
+from cjm_pil_utils.core import crop_square
+```
+
+``` python
+crop_square(src_img).size
+```
+
+    (512, 512)
