@@ -9,7 +9,7 @@ from pathlib import Path  # For working with file paths
 import hashlib
 from glob import glob
 import numpy as np  # For working with arrays
-from PIL import Image, ImageDraw  # For working with images
+from PIL import Image, ImageDraw, ImageFont  # For working with images
 
 # %% ../nbs/01_annotation.ipynb 5
 def draw_masks(image:Image, # The input image on which annotations will be drawn.
