@@ -9,7 +9,7 @@ from pathlib import Path  # For working with file paths
 import hashlib
 from glob import glob
 import numpy as np  # For working with arrays
-from PIL import Image, ImageDraw, ImageFont  # For working with images
+from PIL import Image, ImageColor, ImageDraw, ImageFont  # For working with images
 
 # %% ../nbs/01_annotation.ipynb 5
 def draw_masks(image:Image, # The input image on which annotations will be drawn.
@@ -56,56 +56,67 @@ def draw_masks(image:Image, # The input image on which annotations will be drawn
 
 # %% ../nbs/01_annotation.ipynb 6
 def draw_bboxes(image:Image, # The input image on which annotations will be drawn.
-                boxes:list, # A list of bounding box coordinates where each tuple is (x, y, w, h).
-                labels:list, # A list of labels corresponding to each bounding box.
-                colors:list, # A list of colors for each bounding box and its corresponding label.
-                font:str, # Path to the font file to be used for displaying the labels.
-                width:int=2, # Width of the bounding box lines.
-                font_size:int=18, # Size of the font for the labels.
-                probs:list=None # A list of probability scores corresponding to each label.
-               ) -> Image: # The image annotated with bounding boxes, labels, and optional probability scores.
+                    boxes:list, # A list of bounding box coordinates. The format is determined by `box_format`.
+                    labels:list, # A list of labels corresponding to each bounding box.
+                    colors:list, # A list of colors for each bounding box and its corresponding label.
+                    font:str, # Path to the font file to be used for displaying the labels.
+                    box_format:str="xywh", # The format of the bounding boxes ("xywh" for [x, y, w, h], "xyxy" for [x1, y1, x2, y2],or "cxywh" for [center-x, center-y, width, height]). Defaults to "xywh".
+                    width:int=2, # Width of the bounding box lines.
+                    font_size:int=18, # Size of the font for the labels.
+                    probs:int=None # A list of probability scores corresponding to each label.
+                   ) -> Image: # The image annotated with bounding boxes, labels, and optional probability scores.
     """
     Annotates an image with bounding boxes, labels, and optional probability scores.
 
-    This function draws bounding boxes on the provided image using the given box coordinates, 
+    This function draws bounding boxes on the provided image using the given box coordinates,
     colors, and labels. If probabilities are provided, they will be added to the labels.
     """
-    
+
     # Define a reference diagonal
     REFERENCE_DIAGONAL = 1000
-    
+
     # Scale the font size using the hypotenuse of the image
-    font_size = int(font_size * (np.hypot(*image.size) / REFERENCE_DIAGONAL))
-    
+    font_size_scaled = int(font_size * (np.hypot(*image.size) / REFERENCE_DIAGONAL))
+
     # Add probability scores to labels
     if probs is not None:
         labels = [f"{label}: {prob*100:.2f}%" for label, prob in zip(labels, probs)]
-    
+
     # Create a copy of the image
     annotated_image = image.copy()
 
     # Create an ImageDraw object for drawing on the image
     draw = ImageDraw.Draw(annotated_image)
 
-    # Loop through the bounding boxes and labels in the 'annotation' DataFrame
-    for i in range(len(labels)):
-        # Get the bounding box coordinates
-        x, y, x2, y2 = boxes[i]
+    # Load the font file
+    fnt = ImageFont.truetype(font, font_size_scaled)
 
-        # Create a tuple of coordinates for the bounding box
-        shape = (x, y, x2, y2)
+    for i, box in enumerate(boxes):
+        if box_format == "xywh":
+            x, y, w, h = box
+            shape = (x, y, x + w, y + h)
+        elif box_format == "xyxy":
+            shape = box
+        elif box_format == "cxywh":
+            cx, cy, w, h = box
+            x = cx - w / 2
+            y = cy - h / 2
+            shape = (x, y, x + w, y + h)
+        else:
+            raise ValueError("Invalid box_format. Choose between 'xywh', 'xyxy', or 'cxywh'.")
 
         # Draw the bounding box on the image
         draw.rectangle(shape, outline=colors[i], width=width)
-        
-        # Load the font file
-        fnt = ImageFont.truetype(font, font_size)
-        
-        # Draw the label box on the image
-        label_w, label_h = draw.textbbox(xy=(0,0), text=labels[i], font=fnt)[2:]
-        draw.rectangle((x, y-label_h, x+label_w, y), outline=colors[i], fill=colors[i], width=width)
 
-        # Draw the label on the image
-        draw.multiline_text((x, y-label_h), labels[i], font=fnt, fill='black' if np.mean(colors[i]) > 127.5 else 'white')
+        # Draw the label box on the image
+        label_w, label_h = draw.textbbox(xy=(0, 0), text=labels[i], font=fnt)[2:]
+        text_x, text_y = shape[0], shape[1] - label_h
+        draw.rectangle((text_x, text_y, text_x + label_w, text_y + label_h), outline=colors[i], fill=colors[i], width=width)
+
+        # Determine text color based on bounding box color brightness
+        text_color = 'black' if np.mean(ImageColor.getrgb(colors[i])) > 127.5 else 'white'
         
+        # Draw the label on the image
+        draw.multiline_text((text_x, text_y), labels[i], font=fnt, fill=text_color)
+
     return annotated_image
