@@ -114,7 +114,7 @@ def draw_bboxes(image:Image, # The input image on which annotations will be draw
         draw.rectangle((text_x, text_y, text_x + label_w, text_y + label_h), outline=colors[i], fill=colors[i], width=width)
 
         # Determine text color based on bounding box color brightness
-        text_color = 'black' if np.mean(ImageColor.getrgb(colors[i])) > 127.5 else 'white'
+        text_color = 'black' if np.mean(colors[i]) > 127.5 else 'white'
         
         # Draw the label on the image
         draw.multiline_text((text_x, text_y), labels[i], font=fnt, fill=text_color)
