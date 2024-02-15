@@ -1,0 +1,52 @@
+[
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "source\n\nget_img_files\n\n get_img_files (img_dir:pathlib.Path, img_fmts=['jpg', 'jpeg', 'png'])\n\nGet all the image files in the given directory.\nReturns: img_paths (list): A list of pathlib.Path objects representing the image files\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimg_dir\nPath\n\nThe directory to search for image files\n\n\nimg_fmts\nlist\n[‘jpg’, ‘jpeg’, ‘png’]\nThe list of image formats to search for\n\n\n\nSet the path for the images directory\n\nimg_dir = Path('../images/')\nimg_dir\n\nPath('../images')\n\n\nGet a list of image file paths\n\nimg_paths = get_img_files(img_dir)\nimg_paths\n\n[Path('../images/cat.jpg'), Path('../images/depth-cat.png')]\n\n\n\nsource\n\n\nresize_img\n\n resize_img (img:&lt;module'PIL.Image'from'/opt/hostedtoolcache/Python/3.9.18\n             /x64/lib/python3.9/site-packages/PIL/Image.py'&gt;,\n             target_sz:int=512, divisor:int=32)\n\nResize the image to the target size, keeping aspect ratio and crop the image if the size is not divisible by divisor.\nReturns: img (PIL.Image): The resized and possibly cropped image\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimg\nImage\n\nThe image to be resized\n\n\ntarget_sz\nint\n512\nThe target size of the image\n\n\ndivisor\nint\n32\nThe divisor value to crop the image\n\n\n\nOpen sample image\n\nimg_path = img_paths[0]\nsrc_img = Image.open(img_path).convert('RGB')\nprint(f\"Image Size: {src_img.size}\")\nsrc_img\n\nImage Size: (768, 512)\n\n\n\n\n\n\n\n\n\nResize image\n\nresized_img = resize_img(src_img, target_sz=384, divisor=32)\nprint(f\"New Image Size: {resized_img.size}\")\nresized_img\n\nNew Image Size: (576, 384)\n\n\n\n\n\n\n\n\n\n\nsource\n\n\nstack_imgs\n\n stack_imgs (imgs:[&lt;module'PIL.Image'from'/opt/hostedtoolcache/Python/3.9.\n             18/x64/lib/python3.9/site-packages/PIL/Image.py'&gt;])\n\nStacks a list of images horizontally or vertically, depending on which dimension is larger.\nReturns: stack (PIL.Image): A single image containing all the input images stacked horizontally or vertically.\n\n\n\n\nType\nDetails\n\n\n\n\nimgs\n[‘Image’]\nA list of PIL.Image objects.\n\n\n\nStack images\n\nstacked_imgs = stack_imgs([resized_img, resized_img])\nprint(f\"Stacked Image Size: {stacked_imgs.size}\")\nstacked_imgs\n\nStacked Image Size: (576, 768)\n\n\n\n\n\n\n\n\n\n\nsource\n\n\nimg_save_path\n\n img_save_path (image, save_dir, suffix='', hashlen=8, fmt='PNG')\n\nGenerate the file path to save the image.\nReturns: path (pathlib.Path): The file path to save the image\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimage\n\n\nThe image to be saved\n\n\nsave_dir\n\n\nThe directory where the image will be saved\n\n\nsuffix\nstr\n\nA suffix to add to the file name\n\n\nhashlen\nint\n8\nThe length of the image hash to use in the file name\n\n\nfmt\nstr\nPNG\nThe format of the image\n\n\n\n\nimg_save_path(src_img, save_dir=\"./\", suffix='cat')\n\nPath('3dec29fe-cat.png')\n\n\n\nsource\n\n\navg_images\n\n avg_images (img_1:&lt;module'PIL.Image'from'/opt/hostedtoolcache/Python/3.9.\n             18/x64/lib/python3.9/site-packages/PIL/Image.py'&gt;, img_2:&lt;mod\n             ule'PIL.Image'from'/opt/hostedtoolcache/Python/3.9.18/x64/lib\n             /python3.9/site-packages/PIL/Image.py'&gt;, weight:float=0.5)\n\nThis function takes two input images and a weight as input and returns the average of two images.\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimg_1\nPIL.Image\n\nFirst image\n\n\nimg_2\nPIL.Image\n\nSecond image\n\n\nweight\nfloat\n0.5\nWeightage given to the first image while averaging\n\n\n\n\nimg_1, img_2 = (Image.open(path) for path in img_paths)\navg_images(img_1.convert('L'), img_2, 0.05)\n\n\n\n\n\n\n\n\n\nsource\n\n\ncrop_square\n\n crop_square (img:&lt;module'PIL.Image'from'/opt/hostedtoolcache/Python/3.9.1\n              8/x64/lib/python3.9/site-packages/PIL/Image.py'&gt;)\n\nThis function takes a PIL.Image as input and returns a center square cropped version of the image.\n\n\n\n\nType\nDetails\n\n\n\n\nimg\nImage\nThe PIL Imag to crop\n\n\n\n\ncrop_square(src_img)",
+    "crumbs": [
+      "core"
+    ]
+  },
+  {
+    "objectID": "annotation.html",
+    "href": "annotation.html",
+    "title": "annotation",
+    "section": "",
+    "text": "source\n\ndraw_masks\n\n draw_masks (image:&lt;module'PIL.Image'from'/opt/hostedtoolcache/Python/3.9.\n             18/x64/lib/python3.9/site-packages/PIL/Image.py'&gt;,\n             masks:numpy.ndarray, labels:list, colors:list,\n             conf_threshold:float, alpha:float=0.3)\n\nAnnotates an image with segmentation masks, labels, and optional alpha blending.\nThis function draws segmentation masks on the provided image using the given mask arrays, colors, labels, and alpha values for transparency.\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimage\nPIL.Image\n\nThe input image on which annotations will be drawn.\n\n\nmasks\nndarray\n\nA 3D numpy array of shape (n_masks, height, width) representing segmentation masks.\n\n\nlabels\nlist\n\nA list of labels corresponding to each segmentation mask.\n\n\ncolors\nlist\n\nA list of RGB tuples for each segmentation mask and its corresponding label.\n\n\nconf_threshold\nfloat\n\nThe threshold value to convert mask to binary.\n\n\nalpha\nfloat\n0.3\nThe alpha value for mask transparency.\n\n\nReturns\nPIL.Image\n\nThe image annotated with segmentation masks and labels.\n\n\n\n\nsource\n\n\ndraw_bboxes\n\n draw_bboxes (image:&lt;module'PIL.Image'from'/opt/hostedtoolcache/Python/3.9\n              .18/x64/lib/python3.9/site-packages/PIL/Image.py'&gt;,\n              boxes:list, labels:list, colors:list, font:str,\n              box_format:str='xywh', width:int=2, font_size:int=18,\n              probs:int=None)\n\nAnnotates an image with bounding boxes, labels, and optional probability scores.\nThis function draws bounding boxes on the provided image using the given box coordinates, colors, and labels. If probabilities are provided, they will be added to the labels.\n\n\n\n\n\n\n\n\n\n\nType\nDefault\nDetails\n\n\n\n\nimage\nPIL.Image\n\nThe input image on which annotations will be drawn.\n\n\nboxes\nlist\n\nA list of bounding box coordinates. The format is determined by box_format.\n\n\nlabels\nlist\n\nA list of labels corresponding to each bounding box.\n\n\ncolors\nlist\n\nA list of colors for each bounding box and its corresponding label.\n\n\nfont\nstr\n\nPath to the font file to be used for displaying the labels.\n\n\nbox_format\nstr\nxywh\nThe format of the bounding boxes (“xywh” for [x, y, w, h], “xyxy” for [x1, y1, x2, y2],or “cxywh” for [center-x, center-y, width, height]). Defaults to “xywh”.\n\n\nwidth\nint\n2\nWidth of the bounding box lines.\n\n\nfont_size\nint\n18\nSize of the font for the labels.\n\n\nprobs\nint\nNone\nA list of probability scores corresponding to each label.\n\n\nReturns\nPIL.Image\n\nThe image annotated with bounding boxes, labels, and optional probability scores.",
+    "crumbs": [
+      "annotation"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "cjm-pil-utils",
+    "section": "",
+    "text": "pip install cjm_pil_utils",
+    "crumbs": [
+      "cjm-pil-utils"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "cjm-pil-utils",
+    "section": "",
+    "text": "pip install cjm_pil_utils",
+    "crumbs": [
+      "cjm-pil-utils"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "cjm-pil-utils",
+    "section": "How to use",
+    "text": "How to use\n\nget_img_files\n\nfrom cjm_pil_utils.core import get_img_files\nfrom pathlib import Path\n\n\nimg_dir = Path('../images/')\nimg_paths = get_img_files(img_dir)\nimg_paths\n\n[PosixPath('../images/cat.jpg'), PosixPath('../images/depth-cat.png')]\n\n\n\n\nresize_img\n\nfrom cjm_pil_utils.core import resize_img\nfrom PIL import Image  # For working with images\n\n\nimg_path = img_paths[0]\nsrc_img = Image.open(img_path).convert('RGB')\nprint(f\"Image Size: {src_img.size}\")\n\nresized_img = resize_img(src_img, target_sz=384, divisor=32)\nprint(f\"New Image Size: {resized_img.size}\")\n\nImage Size: (768, 512)\nNew Image Size: (576, 384)\n\n\n\n\nstack_imgs\n\nfrom cjm_pil_utils.core import stack_imgs\n\n\nstacked_imgs = stack_imgs([resized_img, resized_img])\nprint(f\"Stacked Image Size: {stacked_imgs.size}\")\n\nStacked Image Size: (576, 768)\n\n\n\n\navg_images\n\nfrom cjm_pil_utils.core import avg_images\n\n\nimg_1, img_2 = (Image.open(path) for path in img_paths)\navg_img = avg_images(img_1, img_2, 0.5)\n\n\n\ncrop_square\n\nfrom cjm_pil_utils.core import crop_square\n\n\ncrop_square(src_img).size\n\n(512, 512)",
+    "crumbs": [
+      "cjm-pil-utils"
+    ]
+  }
+]
