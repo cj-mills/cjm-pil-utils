@@ -96,7 +96,7 @@ def draw_bboxes(image:Image, # The input image on which annotations will be draw
             x, y, w, h = box
             shape = (x, y, x + w, y + h)
         elif box_format == "xyxy":
-            shape = box
+            shape = tuple(box)
         elif box_format == "cxywh":
             cx, cy, w, h = box
             x = cx - w / 2
